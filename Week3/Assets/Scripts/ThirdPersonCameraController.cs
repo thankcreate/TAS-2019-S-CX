@@ -9,13 +9,18 @@ public class ThirdPersonCameraController : MonoBehaviour {
     private Transform view;
     private Transform cameraBaseTransform;
     private Transform cameraTransform;
+
+    private Transform cameraRoot;
+    private Transform cameraDistanceRoot;
+    private Transform cameraVerticalRoot;
+
     private Transform cameraLookTarget;
-    private Transform avatarTransform;
+    private Transform avatar;
     private Rigidbody avatarRigidbody;
     #endregion
 
     #region Public Tuning Variables
-    public Vector3 avatarObservationOffsetBase;
+    public Vector3 offset;
     public float followDistanceBase;
     public float verticalOffsetBase;
     public float pitchGreaterLimit;
@@ -32,8 +37,8 @@ public class ThirdPersonCameraController : MonoBehaviour {
     private Vector3 avatarLookForward;
 
     //Scalars
-    private float followDistanceApplied;
-    private float verticalOffsetApplied;
+    private float distance;
+    private float vertical;
     #endregion
 
     private void Awake()
@@ -41,11 +46,16 @@ public class ThirdPersonCameraController : MonoBehaviour {
         app = GameObject.Find("Application").transform;
         view = app.Find("View");
         cameraBaseTransform = view.Find("CameraBase");
-        cameraTransform = cameraBaseTransform.Find("Camera");
+        cameraTransform = Camera.main.transform;
+ 
+        cameraRoot = cameraBaseTransform.Find("CameraRoot");
+        cameraDistanceRoot = cameraRoot.Find("CameraDistanceRoot");
+        cameraVerticalRoot = cameraDistanceRoot.Find("CameraVerticalRoot");
+
         cameraLookTarget = cameraBaseTransform.Find("CameraLookTarget");
 
-        avatarTransform = view.Find("AIThirdPersonController");
-        avatarRigidbody = avatarTransform.GetComponent<Rigidbody>();
+        avatar = view.Find("AIThirdPersonController");
+        avatarRigidbody = avatar.GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -76,7 +86,7 @@ public class ThirdPersonCameraController : MonoBehaviour {
 
     private void ComputeData()
     {
-        avatarLookForward = Vector3.Normalize(Vector3.Scale(avatarTransform.forward, new Vector3(1, 0, 1)));
+        avatarLookForward = Vector3.Normalize(Vector3.Scale(avatar.forward, new Vector3(1, 0, 1)));
 
         if (IsWalking())
         {
@@ -93,16 +103,27 @@ public class ThirdPersonCameraController : MonoBehaviour {
         float verticalOffset_Walking = verticalOffsetBase;
         float verticalOffset_Standing = verticalOffsetBase * 4;
 
-        followDistanceApplied = Mathf.Lerp(followDistance_Standing, followDistance_Walking, standingToWalkingSlider);
-        verticalOffsetApplied = Mathf.Lerp(verticalOffset_Standing, verticalOffset_Walking, standingToWalkingSlider);
+        distance = Mathf.Lerp(followDistance_Standing, followDistance_Walking, standingToWalkingSlider);
+        vertical = Mathf.Lerp(verticalOffset_Standing, verticalOffset_Walking, standingToWalkingSlider);
     }
 
     private void FollowAvatar()
     {
-        camRelativePostionAuto = avatarTransform.position;
+        camRelativePostionAuto = avatar.position;
 
-        cameraLookTarget.position = avatarTransform.position + avatarObservationOffsetBase;
-        cameraTransform.position = avatarTransform.position - avatarLookForward * followDistanceApplied + Vector3.up * verticalOffsetApplied;
+        cameraLookTarget.position = avatar.position + offset;
+
+
+
+
+        cameraRoot.position = avatar.position;        
+        cameraRoot.eulerAngles = Vector3.Scale(avatar.eulerAngles, new Vector3(0, 1, 0));
+        cameraDistanceRoot.localPosition = new Vector3(0, 0, -distance);
+        cameraVerticalRoot.localPosition = new Vector3(0, vertical, 0);
+
+        cameraTransform.localPosition = Vector3.zero;
+
+        // cameraTransform.position = avatar.position - avatarLookForward * distance + Vector3.up * vertical;
     }
 
     private void LookAtAvatar()
@@ -142,7 +163,7 @@ public class ThirdPersonCameraController : MonoBehaviour {
     private bool IsWalking()
     {
         lastPos = currentPos;
-        currentPos = avatarTransform.position;
+        currentPos = avatar.position;
         float velInst = Vector3.Distance(lastPos, currentPos) / Time.deltaTime;
 
         if (velInst > .15f)
