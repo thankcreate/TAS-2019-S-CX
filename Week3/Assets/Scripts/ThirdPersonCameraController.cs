@@ -8,11 +8,10 @@ public class ThirdPersonCameraController : MonoBehaviour {
     private Transform app;
     private Transform view;
     private Transform cameraBaseTransform;
-    private Transform cameraTransform;
 
+    private Transform camera;
     private Transform cameraRoot;
     private Transform cameraDistanceRoot;
-    private Transform cameraVerticalRoot;
 
     private Transform cameraLookTarget;
     private Transform avatar;
@@ -37,57 +36,128 @@ public class ThirdPersonCameraController : MonoBehaviour {
     private Vector3 avatarLookForward;
 
     //Scalars
+    private Quaternion rootRotation;
     private float distance;
-    private float vertical;
+    private float rootVertical;
     #endregion
+
+    ControlState controlState;
 
     private void Awake()
     {
         app = GameObject.Find("Application").transform;
         view = app.Find("View");
         cameraBaseTransform = view.Find("CameraBase");
-        cameraTransform = Camera.main.transform;
+        camera = Camera.main.transform;
  
         cameraRoot = cameraBaseTransform.Find("CameraRoot");
         cameraDistanceRoot = cameraRoot.Find("CameraDistanceRoot");
-        cameraVerticalRoot = cameraDistanceRoot.Find("CameraVerticalRoot");
+        
 
         cameraLookTarget = cameraBaseTransform.Find("CameraLookTarget");
 
         avatar = view.Find("AIThirdPersonController");
         avatarRigidbody = avatar.GetComponent<Rigidbody>();
+
+
+        rootRotation = Quaternion.identity;
+        rootVertical = verticalOffsetBase;
+        distance = followDistanceBase;
     }
 
     private void Update()
     {
+        UpdateControlState();
+        UpdateCamera();
+
+        FixOcclusion();
+    }
+
+    void FixOcclusion()
+    {
+        Ray ray = new Ray(cameraRoot.position, camera.position - cameraRoot.position);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Vector3.Distance(cameraRoot.position, camera.position)))
+        {
+            Debug.Log("Hit: " + hit.collider.gameObject);
+            var hitPoint = hit.point;
+
+            distance = Vector3.Distance(hitPoint, cameraRoot.position);
+
+            ApplyAll();
+        }
+        
+    }
+
+
+    void UpdateControlState()
+    {
+  
         if (Input.GetMouseButton(1))
-            ManualUpdate();
+            controlState = ControlState.MANUAL;
         else
-            AutoUpdate();
+            controlState = ControlState.AUTO_FOLLOW;
+
     }
 
-    #region States
-    private void AutoUpdate()
-    {
-        ComputeData();
-        FollowAvatar();
-        LookAtAvatar();
-    }
-    private void ManualUpdate()
-    {
-        FollowAvatar();
-        ManualControl();
-    }
-    #endregion
+    void UpdateCamera()
+    {        
+        switch(controlState)
+        {
+            case ControlState.AUTO_FOLLOW:
+                AutoFollowUpdate();
+                break;
+            case ControlState.MANUAL:
+                ManualUpdate();
+                break;
+        }
 
-    #region Internal Logic
+        ApplyAll();
+    }
+    
+    void ApplyAll()
+    {
+        cameraRoot.rotation = rootRotation;
+        cameraRoot.position = avatar.position + new Vector3(0, rootVertical, 0);
+        cameraDistanceRoot.localPosition = new Vector3(0, 0, -distance);
+    }
+
+    void ManualUpdate()
+    {
+        if (!Input.GetMouseButton(1))
+            return;
+
+        Vector3 _camEulerHold = rootRotation.eulerAngles;
+
+        if (Input.GetAxis("Mouse X") != 0)
+            _camEulerHold.y += Input.GetAxis("Mouse X");
+
+        if (Input.GetAxis("Mouse Y") != 0)
+        {
+            float temp = _camEulerHold.x - Input.GetAxis("Mouse Y");
+            temp = (temp + 360) % 360;
+
+            if (temp < 180)
+                temp = Mathf.Clamp(temp, 0, 80);
+            else
+                temp = Mathf.Clamp(temp, 360 - 80, 360);
+
+            _camEulerHold.x = temp;
+        }
+
+        
+        rootRotation = Quaternion.Euler(_camEulerHold);
+
+        //
+        distance = followDistanceBase * 2;
+    }
+
 
     float standingToWalkingSlider = 0;
 
-    private void ComputeData()
+    void AutoFollowUpdate()
     {
-        avatarLookForward = Vector3.Normalize(Vector3.Scale(avatar.forward, new Vector3(1, 0, 1)));
-
         if (IsWalking())
         {
             standingToWalkingSlider = Mathf.MoveTowards(standingToWalkingSlider, 1, Time.deltaTime * 3);
@@ -97,64 +167,26 @@ public class ThirdPersonCameraController : MonoBehaviour {
             standingToWalkingSlider = Mathf.MoveTowards(standingToWalkingSlider, 0, Time.deltaTime);
         }
 
-        float followDistance_Walking = followDistanceBase;
-        float followDistance_Standing = followDistanceBase * 2;
 
-        float verticalOffset_Walking = verticalOffsetBase;
-        float verticalOffset_Standing = verticalOffsetBase * 4;
+        float distanceWalking = followDistanceBase;
+        float distanceStanding = followDistanceBase * 2;
 
-        distance = Mathf.Lerp(followDistance_Standing, followDistance_Walking, standingToWalkingSlider);
-        vertical = Mathf.Lerp(verticalOffset_Standing, verticalOffset_Walking, standingToWalkingSlider);
+        float pitchWalking = 10;
+        float pitchStanding = 30;
+
+        // pitch
+        var euler = rootRotation.eulerAngles;
+        euler.x = Mathf.Lerp(pitchStanding, pitchWalking, standingToWalkingSlider);
+        rootRotation = Quaternion.Euler(euler);
+
+        // yaw
+        euler.y = avatar.eulerAngles.y;
+        rootRotation = Quaternion.Euler(euler);
+
+        // distance
+        distance = Mathf.Lerp(distanceStanding, distanceWalking, standingToWalkingSlider);
     }
 
-    private void FollowAvatar()
-    {
-        camRelativePostionAuto = avatar.position;
-
-        cameraLookTarget.position = avatar.position + offset;
-
-
-
-
-        cameraRoot.position = avatar.position;        
-        cameraRoot.eulerAngles = Vector3.Scale(avatar.eulerAngles, new Vector3(0, 1, 0));
-        cameraDistanceRoot.localPosition = new Vector3(0, 0, -distance);
-        cameraVerticalRoot.localPosition = new Vector3(0, vertical, 0);
-
-        cameraTransform.localPosition = Vector3.zero;
-
-        // cameraTransform.position = avatar.position - avatarLookForward * distance + Vector3.up * vertical;
-    }
-
-    private void LookAtAvatar()
-    {
-        cameraTransform.LookAt(cameraLookTarget);
-    }
-
-    private void ManualControl()
-    {
-        Vector3 camEulerHold = cameraTransform.localEulerAngles;
-
-        if (Input.GetAxis("Mouse X") != 0)
-            camEulerHold.y += Input.GetAxis("Mouse X");
-
-        if (Input.GetAxis("Mouse Y") != 0)
-        {
-            float temp = camEulerHold.x - Input.GetAxis("Mouse Y");
-            temp = (temp + 360) % 360;
-
-            if (temp < 180)
-                temp = Mathf.Clamp(temp, 0, 80);
-            else
-                temp = Mathf.Clamp(temp, 360 - 80, 360);
-
-            camEulerHold.x = temp;
-        }
-
-        Debug.Log("The V3 to be applied is " + camEulerHold);
-        cameraTransform.localRotation = Quaternion.Euler(camEulerHold);
-    }
-    #endregion
 
     #region Helper Functions
 
@@ -170,6 +202,12 @@ public class ThirdPersonCameraController : MonoBehaviour {
             return true;
         else return false;
     }
-
     #endregion
+
+
+    private enum ControlState
+    {
+        MANUAL,
+        AUTO_FOLLOW
+    }
 }
