@@ -83,7 +83,7 @@ public class ThirdPersonCameraController : MonoBehaviour {
             Debug.Log("Hit: " + hit.collider.gameObject);
             var hitPoint = hit.point;
 
-            distance = Vector3.Distance(hitPoint, cameraRoot.position);
+            distance = Vector3.Distance(hitPoint, cameraRoot.position) - 0.2f;
 
             ApplyAll();
         }
