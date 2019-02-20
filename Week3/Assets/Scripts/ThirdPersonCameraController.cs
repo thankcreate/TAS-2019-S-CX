@@ -107,8 +107,7 @@ public class ThirdPersonCameraController : MonoBehaviour {
         else
         {            
             camera.localRotation = Quaternion.Lerp(camera.localRotation, Quaternion.identity, 3 * Time.deltaTime);
-        }
-        
+        }        
     }
 
     void UpdateOcclusionDetect()
@@ -145,16 +144,15 @@ public class ThirdPersonCameraController : MonoBehaviour {
 
         // yaw
         euler.y = -tunnerlDirection.y;
+        euler.z = 0;
         var destRt = Quaternion.Euler(euler); 
      
-        rootRotation = Quaternion.Lerp(rootRotation, destRt, lerpSpeed * Time.deltaTime);
-        cameraRoot.rotation = rootRotation;
+        rootRotation = Quaternion.Slerp(rootRotation, destRt, lerpSpeed * Time.deltaTime);
+        cameraRoot.rotation = rootRotation;       
 
         // distance
         distance = Mathf.Lerp(distance, tunnelDistance, lerpSpeed * Time.deltaTime);
         cameraDistanceRoot.localPosition = new Vector3(0, 0, -distance);
-
-
 
         return isInTunnel;
     }
@@ -201,7 +199,6 @@ public class ThirdPersonCameraController : MonoBehaviour {
             var lea = whiskerRoot.transform.localEulerAngles;
             lea.y = r;
             whiskerRoot.transform.localEulerAngles = lea;
-
             Ray ray = new Ray(cameraRoot.position, whiskerProbe.position - cameraRoot.position);
             RaycastHit hit;
             var dis = Vector3.Distance(cameraRoot.position, camera.position);
@@ -209,16 +206,10 @@ public class ThirdPersonCameraController : MonoBehaviour {
             if (Physics.Raycast(ray, out hit, dis))
             {
                 int factor = r > 0 ? -1 : 1;
-
-
-                isInSwingAway = true;        
-
+                isInSwingAway = true;   
                 var el = rootRotation.eulerAngles;
                 el.y += factor * adjustStep;
-
                 swingAwayDestination = el.y + factor * adjustStep;
-
-
                 //rootRotation = Quaternion.Euler(el);
                 //cameraRoot.rotation = rootRotation;
                 break;
@@ -240,8 +231,7 @@ public class ThirdPersonCameraController : MonoBehaviour {
             var tempDistance = Vector3.Distance(hitPoint, cameraRoot.position) - 0.2f;
 
             cameraDistanceRoot.localPosition = new Vector3(0, 0, -tempDistance);
-        }
-        
+        }        
     }
 
 
