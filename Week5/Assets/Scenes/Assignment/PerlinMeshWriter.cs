@@ -95,13 +95,14 @@ public class PerlinMeshWriter : MonoBehaviour {
 
                 // used the cross product of partial derivatives to compute the normal
                 var step = 0.01f;
+
                 var y1 = GetY(zCood + step, xCood);
-                var tanZ = new Vector3(0, y1 - y0, step);
+                var diffZ = new Vector3(0, y1 - y0, step);
 
                 var y2 = GetY(zCood, xCood + step);
-                var tanX = new Vector3(step, y2 - y0, 0);
+                var diffX = new Vector3(step, y2 - y0, 0);
 
-                normals[i] = Vector3.Cross(tanZ, tanX).normalized;
+                normals[i] = Vector3.Cross(diffX, diffZ).normalized;
 
 
                 //uvs[i] = new Vector2((float)x / n, (float)z / n);
