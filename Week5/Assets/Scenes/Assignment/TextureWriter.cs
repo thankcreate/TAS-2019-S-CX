@@ -29,6 +29,7 @@ public class TextureWriter
         {
             for (int x = 0; x < width; x++)
             {
+                // colourMap[y * width + x]  = heightMap[x, y] > 0.7 ? highColor : lowColor;
                 colourMap[y * width + x] = Color.Lerp(lowColor, highColor, heightMap[x, y]);
             }
         }

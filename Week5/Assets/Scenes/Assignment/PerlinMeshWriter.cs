@@ -71,7 +71,8 @@ public class PerlinMeshWriter : MonoBehaviour {
     void UpdateMeshInner(bool firstIn = false)
     {
         UpdateVerticesAndNormals();
-        //UpdateTexture();
+        UpdateHeightMaterial();
+        
         if (firstIn)
         {
             UpdateTris();
@@ -85,9 +86,6 @@ public class PerlinMeshWriter : MonoBehaviour {
     {
         var maxLength = gridPerMeshSide * unitLength;
         var verticesCount = (gridPerMeshSide + 1) * (gridPerMeshSide + 1);
-
-        
-
 
         for (int z = 0; z <= gridPerMeshSide; z++)
         {
@@ -120,6 +118,10 @@ public class PerlinMeshWriter : MonoBehaviour {
             }
         }
 
+    }
+
+    void UpdateHeightMaterial()
+    {
         int resolution = TerrainManager.Instance.heightMapResolution;
         float[,] heightMap = new float[resolution, resolution];
         for (int zHM = 0; zHM < resolution; zHM++)
@@ -128,7 +130,7 @@ public class PerlinMeshWriter : MonoBehaviour {
             {
                 float z = (float)zHM / resolution * gridPerMeshSide;
                 float x = (float)xHM / resolution * gridPerMeshSide;
-              
+
                 var zRela = (float)z * unitLength;
                 var xRela = (float)x * unitLength;
                 var zCood = zRela + transform.position.z;
@@ -199,10 +201,5 @@ public class PerlinMeshWriter : MonoBehaviour {
         Material mat = new Material(Shader.Find("Standard"));
         mr.material = mat;
         mr.material.mainTexture = texture;
-       // mr.material.color = color;
-
-        
-        // mr.sharedMaterial.mainTexture = texture;
-        // mr.transform.localScale = new Vector3(texture.width, 1, texture.height);
     }
 }

@@ -155,14 +155,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 998796718ca3b9847ad137b64e559c72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  focus: {fileID: 0}
   gridEachMesh: 32
   gridLength: 1
-  heightFactor: 10
-  bufferSize: 30
+  heightFactor: 15
+  bufferSize: 500
   heightMapResolution: 100
   lowColor: {r: 0, g: 0.41509432, b: 0.081693135, a: 1}
-  highColor: {r: 0.9245283, g: 0.8134933, b: 0.37068352, a: 1}
+  highColor: {r: 1, g: 0.8101416, b: 0.24056602, a: 1}
   meshRoot: {fileID: 1389298415}
   meshPrefab: {fileID: 512728895}
 --- !u!1 &437579713
