@@ -16,14 +16,19 @@ public class PerlinMeshWriter : MonoBehaviour {
     Vector3[] normals;  
     int[] tris;
     Vector2[] uvs;
-    int gridPerMeshSide = 8;
-    public float heightFactor = 2;
+    
+    float heightFactor;
+    int gridPerMeshSide;
+    float unitLength;
     Vector3 lastPosi;
     #endregion
 
     // Use this for initialization
     void Start () {
-        
+        heightFactor = TerrainManager.Instance.heightFactor;
+        gridPerMeshSide = TerrainManager.Instance.gridEachMesh;
+        unitLength = TerrainManager.Instance.gridLength;
+
         mf = GetComponent<MeshFilter>();
         mr = GetComponent<MeshRenderer>();
 
@@ -58,27 +63,31 @@ public class PerlinMeshWriter : MonoBehaviour {
         vertices = new Vector3[verticesCount];
         normals = new Vector3[verticesCount];
         tris = new int[gridPerMeshSide * gridPerMeshSide * 3 * 2];
-        //uvs = new Vector2[verticesCount];
+        uvs = new Vector2[verticesCount];
 
         mf.mesh = mesh;
     }
 
-    void UpdateMeshInner(bool forceUpdate = false)
+    void UpdateMeshInner(bool firstIn = false)
     {
         UpdateVerticesAndNormals();
-        if (forceUpdate)
+        //UpdateTexture();
+        if (firstIn)
         {
             UpdateTris();
             UpdateUVs();
-        }
-        
+        }        
     }
+
+    
 
     void UpdateVerticesAndNormals()
     {
-        float unitLength = 1;
         var maxLength = gridPerMeshSide * unitLength;
         var verticesCount = (gridPerMeshSide + 1) * (gridPerMeshSide + 1);
+
+        
+
 
         for (int z = 0; z <= gridPerMeshSide; z++)
         {
@@ -92,6 +101,8 @@ public class PerlinMeshWriter : MonoBehaviour {
                                               
                 float y0 = GetY(zCood, xCood);
                 vertices[i] = new Vector3(xRela, y0, zRela);
+    
+
 
                 // used the cross product of partial derivatives to compute the normal
                 var step = 0.01f;
@@ -102,17 +113,44 @@ public class PerlinMeshWriter : MonoBehaviour {
                 var y2 = GetY(zCood, xCood + step);
                 var diffX = new Vector3(step, y2 - y0, 0);
 
-                normals[i] = Vector3.Cross(diffX, diffZ).normalized;
+                normals[i] = Vector3.Cross(diffZ, diffX).normalized;
 
 
-                //uvs[i] = new Vector2((float)x / n, (float)z / n);
+                uvs[i] = new Vector2((float)x / gridPerMeshSide, (float)z / gridPerMeshSide);
             }
         }
+
+        int resolution = TerrainManager.Instance.heightMapResolution;
+        float[,] heightMap = new float[resolution, resolution];
+        for (int zHM = 0; zHM < resolution; zHM++)
+        {
+            for (int xHM = 0; xHM < resolution; xHM++)
+            {
+                float z = (float)zHM / resolution * gridPerMeshSide;
+                float x = (float)xHM / resolution * gridPerMeshSide;
+              
+                var zRela = (float)z * unitLength;
+                var xRela = (float)x * unitLength;
+                var zCood = zRela + transform.position.z;
+                var xCood = xRela + transform.position.x;
+
+                float y0 = GetY(zCood, xCood);
+
+
+                // update the texture based on the height
+                if (z < gridPerMeshSide && x < gridPerMeshSide)
+                    heightMap[xHM, zHM] = (y0 + heightFactor) / (heightFactor * 2);
+
+            }
+        }
+
+        // update the texture based on the height
+        var texture = TextureWriter.TextureFromHeightMap(heightMap);
+        DrawTexture(texture);
     }
 
     float GetY(float z, float x)
     {
-        float unitLength = 1;
         var maxLength = gridPerMeshSide * unitLength;
         return Perlin.Noise(z / maxLength, x / maxLength) * heightFactor;
     }
@@ -150,7 +188,21 @@ public class PerlinMeshWriter : MonoBehaviour {
         mesh.vertices = vertices;
         mesh.triangles = tris;
         mesh.normals = normals;
+        mesh.uv = uvs;
+            
 
         // mesh.RecalculateNormals();                  
+    }
+
+    public void DrawTexture(Texture2D texture)
+    {
+        Material mat = new Material(Shader.Find("Standard"));
+        mr.material = mat;
+        mr.material.mainTexture = texture;
+       // mr.material.color = color;
+
+        
+        // mr.sharedMaterial.mainTexture = texture;
+        // mr.transform.localScale = new Vector3(texture.width, 1, texture.height);
     }
 }

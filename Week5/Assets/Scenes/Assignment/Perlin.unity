@@ -125,7 +125,7 @@ GameObject:
   m_Layer: 0
   m_Name: TerrainManager  <------Drag  Me
   m_TagString: Untagged
-  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -156,11 +156,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   focus: {fileID: 0}
-  gridEachMesh: 8
+  gridEachMesh: 32
   gridLength: 1
+  heightFactor: 10
+  bufferSize: 30
+  heightMapResolution: 100
+  lowColor: {r: 0, g: 0.41509432, b: 0.081693135, a: 1}
+  highColor: {r: 0.9245283, g: 0.8134933, b: 0.37068352, a: 1}
   meshRoot: {fileID: 1389298415}
   meshPrefab: {fileID: 512728895}
-  bufferSize: 30
 --- !u!1 &437579713
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,6 +444,16 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114104078239663596, guid: 23e090864b054c74fa7b273de7b56426,
+        type: 3}
+      propertyPath: heightFactor
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114104078239663596, guid: 23e090864b054c74fa7b273de7b56426,
+        type: 3}
+      propertyPath: unitLength
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23e090864b054c74fa7b273de7b56426, type: 3}
 --- !u!1 &1389298415
@@ -547,8 +561,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1636110785}
-  m_LocalRotation: {x: 0.10900441, y: -0.88711053, z: 0.27005592, w: 0.35808215}
-  m_LocalPosition: {x: 11.368258, y: 12.98275, z: 21.639357}
+  m_LocalRotation: {x: 0.024080925, y: -0.9259789, z: 0.37200734, w: 0.059948623}
+  m_LocalPosition: {x: 39.294807, y: 88.89504, z: 116.950455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

@@ -6,12 +6,20 @@ public class TerrainManager : MonoBehaviour {
 
     #region vars
 
-    public Transform focus;
+    Transform focus;
     Vector3 lastFocusPoint;
-    
-    
-    public int gridEachMesh = 8;
-    public int gridLength = 1;
+
+    [Header("Mesh Info")]
+    public int gridEachMesh = 32;
+    public float gridLength = 1f;
+    public float heightFactor = 2;   
+    public int bufferSize = 6;
+
+    [Header("Height Map Info")]
+    public int heightMapResolution = 100;
+    public Color lowColor;
+    public Color highColor;
+
 
     Vector3[] gizmoPositions = new Vector3[4];
     HashSet<int> posiSet = new HashSet<int>();
@@ -25,17 +33,19 @@ public class TerrainManager : MonoBehaviour {
     int firstMeshIndex = 0;
     int currMeshIndex = 0;
 
+    [Header("Hi here!")]
     public GameObject meshRoot;
     public GameObject meshPrefab;
-    public int bufferSize = 6;
+    
 
     #endregion
 
     private void Awake()
-    {  
+    {
+        Instance = this;
     }
 
-
+    public static TerrainManager Instance;
     // Use this for initialization
     void Start () {
         focus = transform;
@@ -80,7 +90,7 @@ public class TerrainManager : MonoBehaviour {
 
         if(meshQueue.Count != bufferSize) 
         {         
-            var go = Instantiate(meshPrefab, newPosi, Quaternion.identity, meshRoot.transform);
+            var go = Instantiate(meshPrefab, newPosi, Quaternion.identity, meshRoot.transform);            
             meshQueue.Enqueue(go);
             taken.Add(newPosi);
         }
