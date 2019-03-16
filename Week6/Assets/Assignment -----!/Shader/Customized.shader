@@ -87,7 +87,7 @@ Shader "CustomLighting"
 			#endif
 			float2 uv_AlphaMask = i.uv_texcoord * _AlphaMask_ST.xy + _AlphaMask_ST.zw;
 			float2 uv_Specular = i.uv_texcoord * _Specular_ST.xy + _Specular_ST.zw;
-			float4 temp_output_17_0_g6 = tex2D( _Specular, uv_Specular );
+			float4 temp_output_17_0_g7 = tex2D( _Specular, uv_Specular );
 			float3 ase_worldPos = i.worldPos;
 			float3 ase_worldViewDir = normalize( UnityWorldSpaceViewDir( ase_worldPos ) );
 			#if defined(LIGHTMAP_ON) && UNITY_VERSION < 560 //aseld
@@ -95,25 +95,25 @@ Shader "CustomLighting"
 			#else //aseld
 			float3 ase_worldlightDir = normalize( UnityWorldSpaceLightDir( ase_worldPos ) );
 			#endif //aseld
-			float3 normalizeResult37_g6 = normalize( ( ase_worldViewDir + ase_worldlightDir ) );
+			float3 normalizeResult37_g7 = normalize( ( ase_worldViewDir + ase_worldlightDir ) );
 			float2 uv_Normal = i.uv_texcoord * _Normal_ST.xy + _Normal_ST.zw;
-			float3 normalizeResult10_g6 = normalize( (WorldNormalVector( i , tex2D( _Normal, uv_Normal ).rgb )) );
-			float dotResult25_g6 = dot( normalizeResult37_g6 , normalizeResult10_g6 );
-			float temp_output_30_0_g6 = max( dotResult25_g6 , 0.0 );
+			float3 normalizeResult10_g7 = normalize( (WorldNormalVector( i , tex2D( _Normal, uv_Normal ).rgb )) );
+			float dotResult25_g7 = dot( normalizeResult37_g7 , normalizeResult10_g7 );
+			float temp_output_30_0_g7 = max( dotResult25_g7 , 0.0 );
 			#if defined(LIGHTMAP_ON) && UNITY_VERSION < 560 //aselc
 			float4 ase_lightColor = 0;
 			#else //aselc
 			float4 ase_lightColor = _LightColor0;
 			#endif //aselc
-			float3 temp_output_4_0_g6 = ( ase_lightColor.rgb * ase_lightAtten );
-			float dotResult5_g6 = dot( normalizeResult10_g6 , ase_worldlightDir );
-			UnityGI gi50_g6 = gi;
-			float3 diffNorm50_g6 = normalizeResult10_g6;
-			gi50_g6 = UnityGI_Base( data, 1, diffNorm50_g6 );
-			float3 indirectDiffuse50_g6 = gi50_g6.indirect.diffuse + diffNorm50_g6 * 0.0001;
+			float3 temp_output_4_0_g7 = ( ase_lightColor.rgb * ase_lightAtten );
+			float dotResult5_g7 = dot( normalizeResult10_g7 , ase_worldlightDir );
+			UnityGI gi50_g7 = gi;
+			float3 diffNorm50_g7 = normalizeResult10_g7;
+			gi50_g7 = UnityGI_Base( data, 1, diffNorm50_g7 );
+			float3 indirectDiffuse50_g7 = gi50_g7.indirect.diffuse + diffNorm50_g7 * 0.0001;
 			float2 uv_Diffuse = i.uv_texcoord * _Diffuse_ST.xy + _Diffuse_ST.zw;
-			float4 temp_output_24_0_g6 = tex2D( _Diffuse, uv_Diffuse );
-			c.rgb = ( ( (temp_output_17_0_g6).rgb * (temp_output_17_0_g6).a * pow( temp_output_30_0_g6 , ( _PowerShininess * 128.0 ) ) * ( temp_output_30_0_g6 * _LinearShininess ) * temp_output_4_0_g6 ) + ( ( ( temp_output_4_0_g6 * max( dotResult5_g6 , 0.0 ) ) + indirectDiffuse50_g6 ) * (temp_output_24_0_g6).rgb ) );
+			float4 temp_output_24_0_g7 = tex2D( _Diffuse, uv_Diffuse );
+			c.rgb = ( ( (temp_output_17_0_g7).rgb * (temp_output_17_0_g7).a * pow( temp_output_30_0_g7 , ( _PowerShininess * 128.0 ) ) * ( temp_output_30_0_g7 * _LinearShininess ) * temp_output_4_0_g7 ) + ( ( ( temp_output_4_0_g7 * max( dotResult5_g7 , 0.0 ) ) + indirectDiffuse50_g7 ) * (temp_output_24_0_g7).rgb ) );
 			c.a = 1;
 			clip( tex2D( _AlphaMask, uv_AlphaMask ).r - _Cutoff );
 			return c;
@@ -224,12 +224,12 @@ Node;AmplifyShaderEditor.SamplerNode;17;-896.9199,320.2996;Float;True;Property;_
 Node;AmplifyShaderEditor.SamplerNode;16;-901.0312,-149.3385;Float;True;Property;_Normal;Normal;6;0;Create;True;0;0;False;0;None;315585a8e766f6940a8f9f09611b0417;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SamplerNode;15;-902.031,77.4615;Float;True;Property;_Diffuse;Diffuse;8;0;Create;True;0;0;False;0;None;0c85a6df65b0a0b46aab0ea9b4160964;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SamplerNode;14;-489.631,225.862;Float;True;Property;_AlphaMask;Alpha Mask;9;0;Create;True;0;0;False;0;None;7f469dc742b37174e86c37ec748ee336;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.FunctionNode;33;-494.8583,35.21899;Float;False;Annotated_BlinnPhong_Std;0;;6;a55fd5a6a0ec8174aa2f7235597cd195;0;3;44;FLOAT3;0,0,0;False;24;COLOR;0,0,0,0;False;17;COLOR;0,0,0,0;False;2;FLOAT3;32;FLOAT;31
+Node;AmplifyShaderEditor.FunctionNode;34;-494.8583,35.21899;Float;False;Annotated_BlinnPhong_Std;0;;7;a55fd5a6a0ec8174aa2f7235597cd195;0;3;44;FLOAT3;0,0,0;False;24;COLOR;0,0,0,0;False;17;COLOR;0,0,0,0;False;2;FLOAT3;32;FLOAT;31
 Node;AmplifyShaderEditor.StandardSurfaceOutputNode;20;-130.2782,-15.7108;Float;False;True;2;Float;ASEMaterialInspector;0;0;CustomLighting;CustomLighting;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Back;0;False;-1;0;False;-1;False;0;False;-1;0;False;-1;False;0;Custom;0.5;True;True;0;True;TransparentCutout;;Transparent;All;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;2;15;10;25;False;0.5;True;0;0;False;-1;0;False;-1;0;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;Relative;0;;5;-1;-1;-1;0;False;0;0;False;-1;-1;0;False;-1;0;0;0;False;0.1;False;-1;0;False;-1;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
-WireConnection;33;44;16;0
-WireConnection;33;24;15;0
-WireConnection;33;17;17;0
+WireConnection;34;44;16;0
+WireConnection;34;24;15;0
+WireConnection;34;17;17;0
 WireConnection;20;10;14;0
-WireConnection;20;13;33;32
+WireConnection;20;13;34;32
 ASEEND*/
-//CHKSM=A681824847FF566CBF1BC74846E86811489337AA
+//CHKSM=714D81CE48E7F44034A221B6458E34563A894C8E
