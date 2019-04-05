@@ -19,62 +19,62 @@ public class FlockingObject : MonoBehaviour
     void Update()
     {
 
-        var follow = AutoFollowSpeed();
-        var away = AutoAwaySpeed();
-        var align = AutoAlignSpeed();
-        var dest = AutoOwnDesitinationSpeed();
+        var follow = AutoFollowDir();
+        var away = AutoAwayDir();
+        var align = AutoAlignDir();
+        var dest = AutoOwnDesitinationDir();
 
+        // var away = Vector3.zero;
+        // var align = Vector3.zero;
+        // var dest = Vector3.zero;
 
         // speed
-        var dir =
+        var finalDir =
             follow * LevelManager.Instance.followWeight
             + away * LevelManager.Instance.awayWeight
             + align * LevelManager.Instance.alignWeight
             + dest * LevelManager.Instance.destinationWieght;
-
-        dir.Normalize();
-        var finalDir = dir;
-        dir = Vector3.Slerp(lastDir, dir, Time.deltaTime * LevelManager.Instance.dirLerp);
-        var destPosi = transform.position + dir * LevelManager.Instance.speedBase * Time.deltaTime;
+        finalDir.Normalize();
+        var lepredDir = finalDir;
+        lepredDir = Vector3.Slerp(lastDir, finalDir, Time.deltaTime * LevelManager.Instance.dirLerp);
+        var destPosi = transform.position + lepredDir * LevelManager.Instance.speedBase * Time.deltaTime;
 
         transform.position = destPosi;
-        lastDir = dir;
+        lastDir = lepredDir;
 
 
 
         // rotation
-        var rotVector = dir;
-
+        var rotVector = lepredDir;      
         
-        // var destRotation = rotVector == Vector3.zero ? transform.rotation : Quaternion.LookRotation(rotVector);
-        // var rot = Quaternion.Lerp(transform.rotation, destRotation, LevelManager.Instance.rotationLerp * Time.deltaTime);
+        var needToTurn = Quaternion.FromToRotation(lastDir, finalDir);
+        var rtY = (needToTurn.eulerAngles.y > 180 ? 360f - needToTurn.eulerAngles.y : needToTurn.eulerAngles.y) / 180f * 1;
+        var rtX = (needToTurn.eulerAngles.x > 180 ? 360f - needToTurn.eulerAngles.x : needToTurn.eulerAngles.x) / 180f * -1;
+
+        // LevelManager.Instance.TestBiggest(rtY);
+
+        //var curSideCurve = mat.GetFloat("_SideFaceCurve");
+        //var newSideCurve = Mathf.Lerp(curSideCurve, rtY, 0.5f * Time.deltaTime);
+
+        //var curPitchCurve = mat.GetFloat("_PitchCurve");
+        //var newPitchCurve = Mathf.Lerp(curPitchCurve, rtX, 0.5f * Time.deltaTime);
         
-        var ftR = Quaternion.FromToRotation(lastDir, finalDir);
-        var rtY = (ftR.eulerAngles.y > 180 ? 360f - ftR.eulerAngles.y : ftR.eulerAngles.y) / 180f * 1;
-        var oriV = mat.GetFloat("_SideFaceCurve");
-        var newV = Mathf.Lerp(oriV, rtY, 0.3f);
-        mat.SetFloat("_SideFaceCurve", newV);
+        //mat.SetFloat("_SideFaceCurve", newSideCurve);
+        //mat.SetFloat("_PitchCurve", newPitchCurve);
 
-
-        var rt = Quaternion.LookRotation(dir);
+        var rt = Quaternion.LookRotation(lepredDir);
         transform.rotation = rt;
     }
-
-    Collider[] context = new Collider[100];
-
-    Vector3 AutoFollowSpeed()
+    
+    Vector3 AutoFollowDir()
     {
         Vector3 folllowSpeed = Vector3.zero;
-
-        for (int i = 0; i < context.Length; i++)
-        {
-            context[i] = null;
-        }
+        
 
         int count = 0;
         Vector3 sum = Vector3.zero;
-        Physics.OverlapSphereNonAlloc(transform.position, LevelManager.Instance.followDetectRadius, context);
-        foreach (var col in context)
+        var c = Physics.OverlapSphere(transform.position, LevelManager.Instance.followDetectRadius);
+        foreach (var col in c)
         {
             if (col != null)
             {
@@ -108,13 +108,10 @@ public class FlockingObject : MonoBehaviour
         float closest = float.MaxValue;
         GameObject closetObject = null;
 
-        for (int i = 0; i < context.Length; i++)
-        {
-            context[i] = null;
-        }
+        
 
-        Physics.OverlapSphereNonAlloc(transform.position, radius, context);
-        foreach (var col in context)
+        var c = Physics.OverlapSphere(transform.position, LevelManager.Instance.followDetectRadius);
+        foreach (var col in c)
         {
             if (col != null)
             {
@@ -136,7 +133,7 @@ public class FlockingObject : MonoBehaviour
     
 
 
-    Vector3 AutoAwaySpeed()
+    Vector3 AutoAwayDir()
     {
         Vector3 awaySpeed = Vector3.zero;
         Vector3 sumPosi = Vector3.zero;
@@ -165,19 +162,15 @@ public class FlockingObject : MonoBehaviour
 
     }
 
-    Vector3 AutoAlignSpeed()
+    Vector3 AutoAlignDir()
     {
         Vector3 dir = Vector3.zero;
 
-        for (int i = 0; i < context.Length; i++)
-        {
-            context[i] = null;
-        }
 
         int count = 0;
         Vector3 sum = Vector3.zero;
-        Physics.OverlapSphereNonAlloc(transform.position, LevelManager.Instance.followDetectRadius, context);
-        foreach (var col in context)
+        var c = Physics.OverlapSphere(transform.position, LevelManager.Instance.followDetectRadius);         
+        foreach (var col in c)
         {
             if (col != null)
             {
@@ -206,9 +199,9 @@ public class FlockingObject : MonoBehaviour
         return dir;
     }
 
-    Vector3 AutoOwnDesitinationSpeed()
+    Vector3 AutoOwnDesitinationDir()
     {
-        var dest = new Vector3(10, 0, 0);
+        var dest = new Vector3(6, 0, 0);
         var dir = dest - transform.position;
         return dir;
     }

@@ -97,6 +97,8 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _PitchCurve: 0
+    - _PitchFaceCurve: 0
     - _RedChannelFactor: 0.01
     - _SideFaceCurve: 0
     - _SideFaceCurveMid: 0.5

@@ -57,5 +57,15 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    float lastBiggest = float.MinValue;
+    public void TestBiggest(float input)
+    {
+        if(input > lastBiggest)
+        {
+            lastBiggest = input;
+            
+        }
+        Debug.Log(lastBiggest);
+    }
 
 }

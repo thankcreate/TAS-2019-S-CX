@@ -17,11 +17,11 @@ public class PlayerTest : MonoBehaviour
     {
         var rt = Quaternion.LookRotation(target.transform.position - transform.position);
         this.transform.rotation = rt;
-        Debug.Log(rt.eulerAngles);
+        //Debug.Log(rt.eulerAngles);
 
         var vec1 = target.transform.position - transform.position;
         var vec2 = target2.transform.position - transform.position;
-        Debug.Log(Quaternion.FromToRotation(vec2, vec1).eulerAngles);
+        //Debug.Log(Quaternion.FromToRotation(vec2, vec1).eulerAngles);
 
 
     }
