@@ -51,16 +51,14 @@ public class FlockingObject : MonoBehaviour
         var rtY = (needToTurn.eulerAngles.y > 180 ? 360f - needToTurn.eulerAngles.y : needToTurn.eulerAngles.y) / 180f * 1;
         var rtX = (needToTurn.eulerAngles.x > 180 ? 360f - needToTurn.eulerAngles.x : needToTurn.eulerAngles.x) / 180f * -1;
 
-        // LevelManager.Instance.TestBiggest(rtY);
+        var curSideCurve = mat.GetFloat("_SideFaceCurve");
+        var newSideCurve = Mathf.Lerp(curSideCurve, rtY, 0.5f * Time.deltaTime);
 
-        //var curSideCurve = mat.GetFloat("_SideFaceCurve");
-        //var newSideCurve = Mathf.Lerp(curSideCurve, rtY, 0.5f * Time.deltaTime);
+        var curPitchCurve = mat.GetFloat("_PitchCurve");
+        var newPitchCurve = Mathf.Lerp(curPitchCurve, rtX, 0.5f * Time.deltaTime);
 
-        //var curPitchCurve = mat.GetFloat("_PitchCurve");
-        //var newPitchCurve = Mathf.Lerp(curPitchCurve, rtX, 0.5f * Time.deltaTime);
-        
-        //mat.SetFloat("_SideFaceCurve", newSideCurve);
-        //mat.SetFloat("_PitchCurve", newPitchCurve);
+        mat.SetFloat("_SideFaceCurve", newSideCurve);
+        mat.SetFloat("_PitchCurve", newPitchCurve);
 
         var rt = Quaternion.LookRotation(lepredDir);
         transform.rotation = rt;
