@@ -1,0 +1,194 @@
+fileFormatVersion: 2
+guid: 2abc6d6f2f90af84cab4bbd0502f7c6d
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Head
+    100004: Leg.Front.L
+    100006: Leg.Front.L.001
+    100008: Leg.Front.L.002
+    100010: Leg.Front.L.003
+    100012: Leg.Front.L.004
+    100014: Leg.Front.L.004_end
+    100016: Leg.Front.R
+    100018: Leg.Front.R.001
+    100020: Leg.Front.R.002
+    100022: Leg.Front.R.003
+    100024: Leg.Front.R.004
+    100026: Leg.Front.R.004_end
+    100028: Leg1.001.L
+    100030: Leg1.001.R
+    100032: Leg1.002.L
+    100034: Leg1.002.R
+    100036: Leg1.003.L
+    100038: Leg1.003.R
+    100040: Leg1.004.L
+    100042: Leg1.004.L_end
+    100044: Leg1.004.R
+    100046: Leg1.004.R_end
+    100048: Leg2.001.L
+    100050: Leg2.001.R
+    100052: Leg2.002.L
+    100054: Leg2.002.R
+    100056: Leg2.003.L
+    100058: Leg2.003.R
+    100060: Leg2.004.L
+    100062: Leg2.004.L_end
+    100064: Leg2.004.R
+    100066: Leg2.004.R_end
+    100068: Leg3.001.L
+    100070: Leg3.001.R
+    100072: Leg3.002.L
+    100074: Leg3.002.R
+    100076: Leg3.003.L
+    100078: Leg3.003.R
+    100080: Leg3.004.L
+    100082: Leg3.004.L_end
+    100084: Leg3.004.R
+    100086: Leg3.004.R_end
+    100088: Root
+    100090: Sphere
+    100092: //RootNode
+    400000: Armature
+    400002: Head
+    400004: Leg.Front.L
+    400006: Leg.Front.L.001
+    400008: Leg.Front.L.002
+    400010: Leg.Front.L.003
+    400012: Leg.Front.L.004
+    400014: Leg.Front.L.004_end
+    400016: Leg.Front.R
+    400018: Leg.Front.R.001
+    400020: Leg.Front.R.002
+    400022: Leg.Front.R.003
+    400024: Leg.Front.R.004
+    400026: Leg.Front.R.004_end
+    400028: Leg1.001.L
+    400030: Leg1.001.R
+    400032: Leg1.002.L
+    400034: Leg1.002.R
+    400036: Leg1.003.L
+    400038: Leg1.003.R
+    400040: Leg1.004.L
+    400042: Leg1.004.L_end
+    400044: Leg1.004.R
+    400046: Leg1.004.R_end
+    400048: Leg2.001.L
+    400050: Leg2.001.R
+    400052: Leg2.002.L
+    400054: Leg2.002.R
+    400056: Leg2.003.L
+    400058: Leg2.003.R
+    400060: Leg2.004.L
+    400062: Leg2.004.L_end
+    400064: Leg2.004.R
+    400066: Leg2.004.R_end
+    400068: Leg3.001.L
+    400070: Leg3.001.R
+    400072: Leg3.002.L
+    400074: Leg3.002.R
+    400076: Leg3.003.L
+    400078: Leg3.003.R
+    400080: Leg3.004.L
+    400082: Leg3.004.L_end
+    400084: Leg3.004.R
+    400086: Leg3.004.R_end
+    400088: Root
+    400090: Sphere
+    400092: //RootNode
+    2100000: Material.Body
+    2100002: Material.Eye
+    2100004: Material.Highlight
+    2100006: Material.Mouse
+    2100008: Material.Heart
+    4300000: Sphere
+    9500000: //RootNode
+    13700000: Sphere
+    2186277476908879412: ImportLogs
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
