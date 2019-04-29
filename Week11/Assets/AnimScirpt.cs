@@ -41,7 +41,9 @@ public class AnimScirpt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        myAnimator.SetBool("IdleFalseMoveTrue", Input.GetKey(KeyCode.W));
+        bool wPressed = Input.GetKey(KeyCode.W);
+        wPressed = true;
+        myAnimator.SetBool("IdleFalseMoveTrue", wPressed);
         idleTime += Time.deltaTime * 6;
 
         myAnimator.SetFloat("IdleX", (Mathf.Sin(idleTime) + 1) / 2);

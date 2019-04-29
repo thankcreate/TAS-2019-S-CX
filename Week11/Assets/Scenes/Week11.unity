@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cyclePerSecond: 1
-  walkToRun: 0.5
+  walkToRun: 0.522
   armOffsetPhase: 0.174
 --- !u!95 &1704819241
 Animator:
